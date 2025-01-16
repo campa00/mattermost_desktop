@@ -4,7 +4,7 @@
 import path from 'path';
 import {pathToFileURL} from 'url';
 
-import {app, ipcMain, nativeTheme, net, protocol, session} from 'electron';
+import {app, ipcMain, nativeTheme, net, protocol, session, BrowserWindow} from 'electron';
 import installExtension, {REACT_DEVELOPER_TOOLS} from 'electron-extension-installer';
 import isDev from 'electron-is-dev';
 
@@ -286,6 +286,25 @@ function initializeInterCommunicationEventListeners() {
     if (process.env.NODE_ENV === 'test') {
         ipcMain.on(SHOW_SETTINGS_WINDOW, handleShowSettingsModal);
     }
+
+    ipcMain.on('openChannelWindow', (event, channelId: string) => {
+        if (!channelId) {
+            return;
+        }
+
+        // 必要に応じて size や session を設定
+        const child = new BrowserWindow({
+            width: 800,
+            height: 600,
+
+            // 例えばサイドバー無しでチャンネルだけを表示する場合など
+            // いろいろオプションを調整してください
+        });
+
+        // チャンネルURLを読み込む (サーバURLは適宜調整)
+        child.loadURL(`http://localhost:8065/test/channels/${channelId}`);
+        child.setTitle(`Channel: ${channelId}`);
+    });
 }
 
 async function initializeAfterAppReady() {

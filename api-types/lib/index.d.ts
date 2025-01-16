@@ -70,4 +70,5 @@ export type DesktopAPI = {
         memory?: number;
     }>) => void) => () => void;
     unregister: (channel: string) => void;
+    openChannelWindow(channelId: string): void;
 };

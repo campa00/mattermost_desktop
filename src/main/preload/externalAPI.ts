@@ -114,6 +114,10 @@ const desktopAPI: DesktopAPI = {
 
     // Utility
     unregister: (channel) => ipcRenderer.removeAllListeners(channel),
+
+    openChannelWindow: (channelId) => {
+        ipcRenderer.send('openChannelWindow', channelId);
+    },
 };
 contextBridge.exposeInMainWorld('desktopAPI', desktopAPI);
 
